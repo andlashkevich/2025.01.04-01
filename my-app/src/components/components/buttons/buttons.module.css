@@ -1,0 +1,65 @@
+.buttons {
+	display: flex;
+	justify-content: center;
+	padding: 15px;
+	text-align: center;
+	width: 100%;
+	padding: 7px;
+
+ }
+ .сButton {
+	background-color: rgb(238, 98, 98);
+	width: 33%;
+	font-size: 17px;
+	/* font-weight: bolder; */
+	margin: 10px;
+	min-height: 10px;
+	border-width: 2px;
+	border-color:rgb(116, 237, 116);
+	border-radius: 15px;
+	padding: 15px;
+ }
+ .sButton {
+	background-color: rgb(238, 98, 98);
+	width: 33%;
+	font-size: 17px;
+	margin: 10px;
+	min-height: 10px;
+	border-width: 2px;
+	border-color:rgb(116, 237, 116);
+	border-radius: 15px;
+	padding: 15px;
+ }
+ .fButton {
+	background-color: rgb(238, 98, 98);
+	width: 33%;
+	font-size: 17px;
+	margin: 10px;
+	min-height: 10px;
+	border-width: 2px;
+	border-color:rgb(116, 237, 116);
+	border-radius: 15px;
+	padding: 15px;
+ }
+ .uButton {
+	background-color: rgb(238, 98, 98);
+	width: 33%;
+	font-size: 17px;
+	margin: 10px;
+	min-height: 10px;
+	border-width: 2px;
+	border-color:rgb(116, 237, 116);
+	border-radius: 15px;
+	padding: 15px;
+}
+.pButton {
+	background-color: rgb(238, 98, 98);
+	width: 33%;
+	font-size: 17px;
+	margin: 10px;
+	min-height: 10px;
+	border-width: 2px;
+	border-color:rgb(116, 237, 116);
+	border-radius: 15px;
+	padding: 15px;
+}

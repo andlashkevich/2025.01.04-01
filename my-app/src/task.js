@@ -1,181 +1,50 @@
-'use client';
-
+import { AppContext } from './context';
 import styles from './task.module.css';
-import { useEffect, useState, useRef } from 'react';
+import { useState } from 'react';
+import { Create, Delete, Find, Fix, GetTsk, InpChg, Sort, Update } from './components';
+import { Buttons, Field, Head, Tasks } from './components';
 
 export function App() {
 	const [inTask, setInTask] = useState('');
 	const [outTask, setOutTask] = useState([]);
 	const [error, setError] = useState(null);
-	const [id, setId] = useState('');
+	const [ind, setInd] = useState('');
 	const [refresh, setRefresh] = useState(false);
-	const [sz, setSz] = useState(0);
 	const setClear = () => {
 		setInTask('');
 		setError(null);
 	};
-
-	const ol = useRef(null);
-
-	useEffect(() => {
-		const resz = () => setSz(ol.current?.clientWidth / 17 - 3);
-		resz();
-		window.addEventListener('resize', resz);
-		return () => window.removeEventListener('resize', resz);
-	}, [outTask]);
-
-	useEffect(() => {
-		fetch('http://localhost:3003/tasks')
-			.then((rsp) => rsp.json())
-			.then((dt) => {
-				setOutTask(dt);
-			});
-	}, [inTask, refresh]);
-
-	const inputChange = ({ target }) => {
-		let error = null;
-		setInTask(target.value);
-		if (outTask.find((it) => it.task === target.value))
-			error = 'Такая задача уже существует';
-		if (target.value.length > 100) error = 'Слишком длинная задача';
-		setError(error);
-	};
-
-	const createTask = () => {
-		fetch('http://localhost:3003/tasks', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json; charset=utf-8' },
-			body: JSON.stringify({ task: inTask }),
-		})
-			.then((rsp) => rsp.json())
-			.then((dt) => console.log(dt))
-			.catch((error) => console.log(error))
-			.finally(() => setClear());
-	};
-
-	const delTask = (e) => {
-		let id = outTask.find(
-			(it) => it.task === e.target.previousElementSibling.innerText,
-		).id;
-		fetch(`http://localhost:3003/tasks/${id}`, {
-			method: 'DELETE',
-		});
-		setRefresh(!refresh);
-	};
-
-	const sortTask = (e) => {
-		setOutTask(
-			[...outTask].sort((a, b) =>
-				a.task.toLowerCase() > b.task.toLowerCase() ? 1 : -1,
-			),
-		);
-	};
-
-	const fixTask = (e) => {
-		setInTask(e.target.innerText);
-		let id = outTask.find((it) => it.task === e.target.innerText).id;
-		setId(id);
-	};
-
-	const updTask = () => {
-		fetch(`http://localhost:3003/tasks/${id}`, {
-			method: 'PUT',
-			body: JSON.stringify({ task: inTask }),
-			headers: {
-				'content-Type': 'application/json; charset=utf-8',
-			},
-		})
-			.then((rsp) => rsp.json())
-			.then((dt) => console.log(dt))
-			.catch((error) => console.log(error))
-			.finally(() => setClear());
-	};
-
-	const findTask = () => {
-		let a = [];
-		a = outTask.filter((it) => it.task.includes(inTask));
-		inTask && a.length > 0 ? setOutTask(a) : setError('Поиск не дал результатов');
-	};
-
-	// Если я правильно понял debounce , то его код с findTask указан ниже на замену текущей функции findTask, которая ничего на сервере не ищет, а перебирает существующие на странице элементы и не нуждается во временных задержках и в целом проще.
-
-	// const debounce = (f, timeout) => {
-	// 	let id = null;
-	// 	return (...arg) => {
-	// 		clearTimeout(id);
-	// 		id = setTimeout(() => f(...arg), timeout);
-	// 	};
-	// };
-	// const fTask = () => {
-	// 	fetch("http://localhost:3003/tasks")
-	// 		.then((rsp) => rsp.json())
-	// 		.then((dt) => {
-	// 			setOutTask(dt.filter((it) => it.task.includes(inTask)));
-	// 		});
-	// };
-	// const findTask = debounce(fTask, 3000);
+	GetTsk(inTask, refresh, setOutTask);
+	const inputChange = ({ target }) => InpChg({ target }, outTask, setError, setInTask);
+	const fixTask = (e) => Fix(e, outTask, setInd, setInTask);
+	const sortTask = () => Sort(outTask, setOutTask);
+	const findTask = () => Find(inTask, outTask, setError, setOutTask);
+	const createTask = () => Create(inTask, setClear);
+	const updTask = () => Update(ind, inTask, setClear);
+	const delTask = (e) => Delete(e, outTask, refresh, setRefresh);
 
 	return (
-		<div className={styles.wrap}>
-			<h1 className={styles.head}> Задачи на неделю (JSON Server)</h1>
-			<div className={styles.field}>
-				{error ? <div className={styles.error}>{error}</div> : null}
-				<textarea
-					name="newTask"
-					value={inTask}
-					onChange={inputChange}
-					className={styles.input}
-					placeholder="1.Введите новую задачу или словосочетание для поиска существующей. 2.Для исправления имеющейся задачи нажмите на неё и внесите желаемое изменение в этом поле. 3.Ввод пустого значения или задачи длиной более 100 знаков неприемлем. 4.Если задача уже есть в списке, ввести её еще раз не получится."
-					autoFocus={true}
-					autoComplete="on"
-				></textarea>
-				<button onClick={setClear} className={styles.xBut}>
-					X
-				</button>
+		<AppContext.Provider>
+			<div className={styles.wrap}>
+				<Head />
+				<Field
+					error={error}
+					inTask={inTask}
+					inputChange={inputChange}
+					setClear={setClear}
+				/>
+				<Buttons
+					error={error}
+					inTask={inTask}
+					outTask={outTask}
+					createTask={createTask}
+					findTask={findTask}
+					sortTask={sortTask}
+					updTask={updTask}
+				/>
+				<Tasks delTask={delTask} fixTask={fixTask} outTask={outTask} />
 			</div>
-			<div className={styles.buttons}>
-				<button
-					disabled={!inTask || error}
-					className={styles.сButton}
-					onClick={createTask}
-				>
-					Добавить
-				</button>
-				<button disabled={!outTask} onClick={sortTask} className={styles.sButton}>
-					Упорядочить
-				</button>
-				<button disabled={!inTask} onClick={findTask} className={styles.fButton}>
-					Найти
-				</button>
-				<button
-					disabled={!inTask || error}
-					onClick={updTask}
-					className={styles.uButton}
-				>
-					Изменить
-				</button>
-			</div>
-			<ol className={styles.ol} ref={ol}>
-				{outTask.map((it, id) => {
-					return (
-						<div className={styles.tasks} key={id}>
-							<li onClick={fixTask} className={styles.uncheck}>
-								{it.task.length > sz
-									? `${it.task.slice(0, sz)}...`
-									: it.task}
-							</li>
-							<button
-								// disabled={}
-								onClick={delTask}
-								className={styles.del}
-							>
-								Удалить
-							</button>
-						</div>
-					);
-				})}
-			</ol>
-		</div>
+		</AppContext.Provider>
 	);
 }
 
