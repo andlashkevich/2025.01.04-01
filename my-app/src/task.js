@@ -1,8 +1,7 @@
 import { AppContext } from './context';
 import styles from './task.module.css';
 import { useState } from 'react';
-import { Create, Delete, Find, Fix, GetTsk, InpChg, Sort, Update } from './components';
-import { Buttons, Field, Head, Tasks } from './components';
+import { GetTsk, Buttons, Field, Head, Tasks } from './components';
 
 export function App() {
 	const [inTask, setInTask] = useState('');
@@ -15,27 +14,19 @@ export function App() {
 		setError(null);
 	};
 	GetTsk(inTask, refresh, setOutTask);
-	const inputChange = ({ target }) => InpChg({ target }, outTask, setError, setInTask);
-	const fixTask = (e) => Fix(e, outTask, setInd, setInTask);
-	const sortTask = () => Sort(outTask, setOutTask);
-	const findTask = () => Find(inTask, outTask, setError, setOutTask);
-	const createTask = () => Create(inTask, setClear);
-	const updTask = () => Update(ind, inTask, setClear);
-	const delTask = (e) => Delete(e, outTask, refresh, setRefresh);
 
 	return (
-		<AppContext.Provider value={{inTask, outTask}}>
+		<AppContext.Provider value={{ inTask, setInTask, outTask, setOutTask }}>
 			<div className={styles.wrap}>
 				<Head />
-				<Field error={error} inputChange={inputChange} setClear={setClear} />
+				<Field error={error} setClear={setClear} setError={setError} />
 				<Buttons
 					error={error}
-					createTask={createTask}
-					findTask={findTask}
-					sortTask={sortTask}
-					updTask={updTask}
+					setError={setError}
+					setClear={setClear}
+					ind={ind}
 				/>
-				<Tasks delTask={delTask} fixTask={fixTask} />
+				<Tasks refresh={refresh} setRefresh={setRefresh} setInd={setInd} />
 			</div>
 		</AppContext.Provider>
 	);

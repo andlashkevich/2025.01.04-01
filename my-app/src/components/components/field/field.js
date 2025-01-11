@@ -1,9 +1,11 @@
 import { useContext } from 'react';
 import { AppContext } from '../../../context';
 import styles from './field.module.css';
+import { InpChg } from '../../../components';
 
-export const Field = ({ error, inputChange, setClear }) => {
-	const { inTask } = useContext(AppContext);
+export const Field = ({ error, setClear, setError }) => {
+	const { inTask, setInTask, outTask } = useContext(AppContext);
+	const inputChange = ({ target }) => InpChg({ target }, outTask, setError, setInTask);
 	return (
 		<div className={styles.field}>
 			{error ? <div className={styles.error}>{error}</div> : null}
