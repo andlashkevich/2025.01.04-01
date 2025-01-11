@@ -3,9 +3,7 @@ import { AppContext } from '../../../context';
 import styles from './buttons.module.css';
 
 export const Buttons = ({ error, createTask, findTask, sortTask, updTask }) => {
-	const { int, out } = useContext(AppContext);
-	const [inTask] = int;
-	const [outTask] = out;
+	const { inTask, outTask } = useContext(AppContext);
 	return (
 		<div className={styles.buttons}>
 			<button

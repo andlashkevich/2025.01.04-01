@@ -3,8 +3,7 @@ import { useContext } from 'react';
 import { AppContext } from '../../../context';
 
 export const Tasks = ({ delTask, fixTask }) => {
-	const { out } = useContext(AppContext);
-	const [outTask] = out;
+	const { outTask } = useContext(AppContext);
 	return (
 		<ol className={styles.ol}>
 			{outTask.map((it, id) => {

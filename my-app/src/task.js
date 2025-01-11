@@ -24,9 +24,7 @@ export function App() {
 	const delTask = (e) => Delete(e, outTask, refresh, setRefresh);
 
 	return (
-		<AppContext.Provider
-			value={{ int: [inTask, setInTask], out: [outTask, setOutTask] }}
-		>
+		<AppContext.Provider value={{inTask, outTask}}>
 			<div className={styles.wrap}>
 				<Head />
 				<Field error={error} inputChange={inputChange} setClear={setClear} />

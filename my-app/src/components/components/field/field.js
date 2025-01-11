@@ -3,8 +3,7 @@ import { AppContext } from '../../../context';
 import styles from './field.module.css';
 
 export const Field = ({ error, inputChange, setClear }) => {
-	const { int } = useContext(AppContext);
-	const [inTask] = int;
+	const { inTask } = useContext(AppContext);
 	return (
 		<div className={styles.field}>
 			{error ? <div className={styles.error}>{error}</div> : null}
