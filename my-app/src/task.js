@@ -9,23 +9,15 @@ export function App() {
 	const [error, setError] = useState(null);
 	const [ind, setInd] = useState('');
 	const [refresh, setRefresh] = useState(false);
-	const setClear = () => {
-		setInTask('');
-		setError(null);
-	};
+
 	GetTsk(inTask, refresh, setOutTask);
 
 	return (
 		<AppContext.Provider value={{ inTask, setInTask, outTask, setOutTask }}>
 			<div className={styles.wrap}>
 				<Head />
-				<Field error={error} setClear={setClear} setError={setError} />
-				<Buttons
-					error={error}
-					setError={setError}
-					setClear={setClear}
-					ind={ind}
-				/>
+				<Field error={error} setError={setError} />
+				<Buttons error={error} setError={setError} ind={ind} />
 				<Tasks refresh={refresh} setRefresh={setRefresh} setInd={setInd} />
 			</div>
 		</AppContext.Provider>

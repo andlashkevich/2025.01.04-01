@@ -3,12 +3,12 @@ import { AppContext } from '../../../context';
 import styles from './buttons.module.css';
 import { Create, Find, Sort, Update } from '../../../components';
 
-export const Buttons = ({ error, setError, setClear, ind }) => {
-	const { inTask, outTask, setOutTask } = useContext(AppContext);
+export const Buttons = ({ error, setError, ind }) => {
+	const { inTask, setInTask, outTask, setOutTask } = useContext(AppContext);
 	const sortTask = () => Sort(outTask, setOutTask);
 	const findTask = () => Find(inTask, outTask, setError, setOutTask);
-	const createTask = () => Create(inTask, setClear);
-	const updTask = () => Update(ind, inTask, setClear);
+	const createTask = () => Create(inTask, setError, setInTask);
+	const updTask = () => Update(ind, inTask, setError, setInTask);
 	return (
 		<div className={styles.buttons}>
 			<button

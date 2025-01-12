@@ -3,7 +3,7 @@ import { AppContext } from '../../../context';
 import styles from './field.module.css';
 import { InpChg } from '../../../components';
 
-export const Field = ({ error, setClear, setError }) => {
+export const Field = ({ error, setError }) => {
 	const { inTask, setInTask, outTask } = useContext(AppContext);
 	const inputChange = ({ target }) => InpChg({ target }, outTask, setError, setInTask);
 	return (
@@ -18,7 +18,13 @@ export const Field = ({ error, setClear, setError }) => {
 				autoFocus={true}
 				autoComplete="on"
 			></textarea>
-			<button onClick={setClear} className={styles.xBut}>
+			<button
+				onClick={() => {
+					setInTask('');
+					setError(null);
+				}}
+				className={styles.xBut}
+			>
 				X
 			</button>
 		</div>
